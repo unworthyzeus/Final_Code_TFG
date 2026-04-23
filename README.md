@@ -11,7 +11,7 @@ This is the **Final Proposed System (Try 80)**.
 - **Purpose**: Provides the most accurate, probabilistic predictions for path loss, delay spread, and angular spread.
 - **Contents**: Training scripts (`train_try80.py`), evaluation logic (`evaluate_try80.py`), and documentation (`DESIGN_TRY80.md`).
 
-### 2. [model_pmhhnet.py](./model_pmhhnet.py)
+### 2. [model_pmhhnet.py](./other_good_tries/model_pmhhnet.py)
 A **Legacy Baseline (Try 68/PMHHNet)**.
 - **Architecture**: A point-estimate residual regressor based on **PMNet** (Rappaport, 2023).
 - **Key Features**: High-Frequency (HF) stem for building edge preservation and sinusoidal FiLM for UAV height conditioning.
