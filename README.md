@@ -1,14 +1,16 @@
-# TFG Final Models: Deep Learning for Air-to-Ground Propagation
+# TFG Final Code: Deep Learning for Air-to-Ground Propagation
 
-This directory serves as the centralized repository for the core models and architectures developed during this TFG (Trabajo de Fin de Grado). It includes both the final proposed solution and key legacy baselines that remain useful for future research.
+This repository contains the source code and technical documentation for the neural architectures developed during this TFG (Trabajo de Fin de Grado). It includes the final proposed training/evaluation pipeline and key legacy baseline implementations that remain useful for future research.
+
+Data files and trained weight/checkpoint artifacts are intentionally not bundled here; this repository is for code, configuration, calibration JSONs, and documentation.
 
 ## Directory Structure
 
 ### 1. [TFGEightiethTry80_preliminary_code](./TFGEightiethTry80_preliminary_code)
-This is the **Final Proposed System (Try 80)**.
+This is the **Final Proposed Code Path (Try 80)**.
 - **Architecture**: A hybrid, prior-anchored multi-task network.
 - **Key Innovation**: Uses "frozen" physical priors (coherent two-ray path loss, regime-wise spread regressions) and learns bounded residual corrections via a shared U-Net backbone with Gaussian Mixture Model (GMM) heads.
-- **Purpose**: Provides the most accurate, probabilistic predictions for path loss, delay spread, and angular spread.
+- **Purpose**: Implements the final probabilistic prediction pipeline for path loss, delay spread, and angular spread.
 - **Contents**: Training scripts (`train_try80.py`), evaluation logic (`evaluate_try80.py`), and documentation (`DESIGN_TRY80.md`).
 
 ### 2. [model_pmhhnet.py](./other_good_tries/model_pmhhnet.py)
@@ -18,12 +20,9 @@ A **Legacy Baseline (Try 68/PMHHNet)**.
 - **Purpose**: While superseded by the GMM approach, it remains a lightweight and highly effective baseline for standard point-regression tasks or real-time implementations.
 - **Note**: See the detailed description in the [PMHHNet section below](#pmhhnet-details).
 
-### 3. [dataset](./dataset)
-Placeholder directory for the **CKM (Channel Knowledge Map)** dataset or mapping scripts used during training and validation.
-
 ---
 
-## Technical Summary of Models
+## Technical Summary of Implementations
 
 | Feature | PMHHNet (Baseline) | Try 80 (Final) |
 | :--- | :--- | :--- |
@@ -34,4 +33,4 @@ Placeholder directory for the **CKM (Channel Knowledge Map)** dataset or mapping
 | **Best Use Case** | Real-time / Point prediction | Full distributional analysis / High accuracy |
 
 ## How to use
-For detailed instructions on running each model, please refer to their respective subdirectories or the technical documentation in the main thesis repository.
+For detailed instructions on running each implementation, please refer to the corresponding subdirectory or the technical documentation in the main thesis repository.
