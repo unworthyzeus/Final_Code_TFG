@@ -1,0 +1,25 @@
+# Keep this repository focused on source code and documentation.
+dataset/
+datasets/
+data/
+
+# Trained weights and checkpoints.
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Large/generated numeric artifacts.
+*.h5
+*.hdf5
+*.npy
+*.npz
+
+# Generated outputs and local runtime files.
+outputs/
+runs/
+checkpoints/
+cache/
+__pycache__/
+*.py[cod]
+*.log
