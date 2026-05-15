@@ -18,44 +18,55 @@ prior:
 
 model:
   in_channels: 9
-  cond_dim: 128
+  cond_dim: 160
   height_embed_dim: 32
-  base_width: 96
+  base_width: 128
   num_components: 3
   decoder_dropout: 0.10
   alpha_bias: -2.0
   sigma_min: 0.05
   sigma_max: 3.0
-  path_residual_los_max: 2.0
-  path_residual_nlos_max: 4.0
-  delay_residual_los_max: 30.0
-  delay_residual_nlos_max: 40.0
-  angular_residual_los_max: 9.0
-  angular_residual_nlos_max: 13.0
+  path_residual_los_max: 7.0
+  path_residual_nlos_max: 25.0
+  delay_residual_los_max: 20.0
+  delay_residual_nlos_max: 20.0
+  angular_residual_los_max: 17.0
+  angular_residual_nlos_max: 15.0
 
 losses:
-  map_nll: 1.0
-  dist_kl: 0.25
-  moment_match: 0.10
-  anchor: 0.05
-  prior_guard: 0.10
-  outlier_budget: 0.02
+  map_nll: 0.0
+  dist_kl: 0.0
+  moment_match: 0.0
+  anchor: 0.01
+  prior_guard: 0.02
+  outlier_budget: 0.0
   outlier_budget_threshold: 0.60
-  rmse: 0.40
-  mae: 0.10
+  rmse: 1.0
+  mae: 0.05
+
+task_weights:
+  path_loss: 1.0
+  delay_spread: 0.25
+  angular_spread: 0.25
+
+score_weights:
+  path_loss: 1.0
+  delay_spread: 0.30
+  angular_spread: 0.25
 
 training:
   optimizer: adamw
-  lr: 2.0e-4
+  lr: 5.0e-5
   weight_decay: 0.01
-  warmup_epochs: 2
-  epochs: 120
+  warmup_epochs: 1
+  epochs: 40
   batch_size: 1
   grad_accum_steps: 8
-  patience: 20
+  patience: 10
   num_workers: 6
 
 runtime:
   device: cuda
-  output_dir: outputs/try80_joint_big
-  resume_checkpoint: ""
+  output_dir: outputs/try80_joint_huge_pathloss_finetune
+  resume_checkpoint: outputs/try80_joint_huge_pathloss_finetune/best_model.pt
+  reset_optimizer_on_resume: true

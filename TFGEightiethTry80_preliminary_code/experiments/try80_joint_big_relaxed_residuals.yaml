@@ -26,11 +26,11 @@ model:
   alpha_bias: -2.0
   sigma_min: 0.05
   sigma_max: 3.0
-  path_residual_los_max: 2.0
-  path_residual_nlos_max: 4.0
-  delay_residual_los_max: 30.0
+  path_residual_los_max: 5.0
+  path_residual_nlos_max: 20.0
+  delay_residual_los_max: 40.0
   delay_residual_nlos_max: 40.0
-  angular_residual_los_max: 9.0
+  angular_residual_los_max: 15.0
   angular_residual_nlos_max: 13.0
 
 losses:
@@ -49,7 +49,7 @@ training:
   lr: 2.0e-4
   weight_decay: 0.01
   warmup_epochs: 2
-  epochs: 120
+  epochs: 180
   batch_size: 1
   grad_accum_steps: 8
   patience: 20
@@ -57,5 +57,5 @@ training:
 
 runtime:
   device: cuda
-  output_dir: outputs/try80_joint_big
-  resume_checkpoint: ""
+  output_dir: outputs/try80_joint_big_relaxed_residuals
+  resume_checkpoint: outputs/try80_joint_big_relaxed_residuals/best_model.pt

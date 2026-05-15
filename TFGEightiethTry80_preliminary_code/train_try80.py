@@ -8,6 +8,7 @@ import os
 import random
 import time
 from dataclasses import asdict
+from datetime import timedelta
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -45,7 +46,8 @@ def resolve_single_process_device(preferred: str | None = None) -> torch.device:
 def init_distributed(preferred_device: str | None = None) -> Tuple[bool, int, int, torch.device]:
     if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
         backend = os.environ.get("DDP_BACKEND", "nccl")
-        dist.init_process_group(backend=backend)
+        timeout_seconds = int(os.environ.get("DDP_TIMEOUT_SECONDS", "7200"))
+        dist.init_process_group(backend=backend, timeout=timedelta(seconds=timeout_seconds))
         rank = dist.get_rank()
         world = dist.get_world_size()
         local_rank = int(os.environ.get("LOCAL_RANK", 0))
@@ -276,12 +278,12 @@ def run_validation(
     }
 
 
-def composite_score(summary: Dict[str, object]) -> float:
+def composite_score(summary: Dict[str, object], cfg: Try80Cfg) -> float:
     flat = summary["metrics"]["model"]["flat"]
     return (
-        float(flat["path_loss_rmse_overall_pw"])
-        + 0.05 * float(flat["delay_spread_rmse_overall_pw"])
-        + 0.10 * float(flat["angular_spread_rmse_overall_pw"])
+        cfg.score_weights.path_loss * float(flat["path_loss_rmse_overall_pw"])
+        + cfg.score_weights.delay_spread * float(flat["delay_spread_rmse_overall_pw"])
+        + cfg.score_weights.angular_spread * float(flat["angular_spread_rmse_overall_pw"])
     )
 
 
@@ -311,6 +313,8 @@ def main() -> None:
                                "try79_calibration_json": str(cfg.prior.try79_calibration_json)},
                     "model": asdict(cfg.model),
                     "losses": asdict(cfg.losses),
+                    "task_weights": asdict(cfg.task_weights),
+                    "score_weights": asdict(cfg.score_weights),
                     "training": asdict(cfg.training),
                     "runtime": {**asdict(cfg.runtime), "output_dir": str(cfg.runtime.output_dir),
                                  "resume_checkpoint": str(cfg.runtime.resume_checkpoint) if cfg.runtime.resume_checkpoint else None},
@@ -355,7 +359,12 @@ def main() -> None:
         lr_lambda=lambda epoch: lr_lambda(epoch, cfg.training.warmup_epochs, cfg.training.epochs),
     )
     height_embed = HeightEmbedding()
-    loss_weights = LossWeights(**asdict(cfg.losses))
+    loss_weights = LossWeights(
+        **asdict(cfg.losses),
+        path_loss_task=cfg.task_weights.path_loss,
+        delay_spread_task=cfg.task_weights.delay_spread,
+        angular_spread_task=cfg.task_weights.angular_spread,
+    )
 
     start_epoch = 0
     best_score = float("inf")
@@ -369,13 +378,18 @@ def main() -> None:
     if cfg.runtime.resume_checkpoint and cfg.runtime.resume_checkpoint.exists():
         state = torch.load(cfg.runtime.resume_checkpoint, map_location=device)
         model.load_state_dict(state["model"], strict=False)
-        if "optimizer" in state:
+        if not cfg.runtime.reset_optimizer_on_resume and "optimizer" in state:
             optimizer.load_state_dict(state["optimizer"])
-        if "scheduler" in state:
+        if not cfg.runtime.reset_optimizer_on_resume and "scheduler" in state:
             scheduler.load_state_dict(state["scheduler"])
-        start_epoch = int(state.get("epoch", 0)) + 1
-        best_score = float(state.get("best_score", best_score))
-        history = list(state.get("history", []))
+        if cfg.runtime.reset_optimizer_on_resume:
+            start_epoch = 0
+            best_score = float("inf")
+            history = []
+        else:
+            start_epoch = int(state.get("epoch", 0)) + 1
+            best_score = float(state.get("best_score", best_score))
+            history = list(state.get("history", []))
         if main_:
             print(f"[rank0] resumed from {cfg.runtime.resume_checkpoint} at epoch {start_epoch}")
 
@@ -415,7 +429,7 @@ def main() -> None:
                 store_per_sample=False,
             )
             val_seconds = time.time() - val_time_start
-            score = composite_score(val_summary)
+            score = composite_score(val_summary, cfg)
             epoch_row = {
                 "epoch": epoch,
                 "lr": float(optimizer.param_groups[0]["lr"]),

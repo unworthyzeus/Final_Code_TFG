@@ -4,10 +4,10 @@ Clean executable/project-code count for the final Try 80 project:
 
 | Category | Lines |
 |---|---:|
-| Python source | 5,159 |
-| SLURM scripts | 147 |
-| YAML config | 56 |
-| **Code/config total** | **5,362** |
+| Python source | 6,244 |
+| SLURM scripts | 193 |
+| YAML config | 233 |
+| **Code/config total** | **6,670** |
 
 This excludes calibration JSON assets, generated LaTeX build artifacts,
 documentation-only files, caches, binaries, datasets, and model checkpoints.
