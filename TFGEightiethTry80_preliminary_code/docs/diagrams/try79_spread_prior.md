@@ -165,8 +165,8 @@ Defined at
 [`prior_try79.py:166`](/c:/TFG/TFGpractice/TFGSeventyNinthTry79/prior_try79.py#L166):
 
 ```python
-LOS_CLIP_HI  = {"angular_spread": 15.0, "delay_spread": 400.0}
-NLOS_CLIP_HI = {"angular_spread": 90.0, "delay_spread": 400.0}
+LOS_CLIP_HI  = {"angular_spread": 15.0, "delay_spread": 910.0}
+NLOS_CLIP_HI = {"angular_spread": 90.0, "delay_spread": 910.0}
 ```
 
 Two clamps per metric — different for LoS vs NLoS. Reason for the tight

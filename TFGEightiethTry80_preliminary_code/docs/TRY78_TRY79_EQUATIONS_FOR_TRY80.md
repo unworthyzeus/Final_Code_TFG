@@ -284,7 +284,7 @@ y^{(0)}(x)=\mathrm{clip}\!\left(y^{(0)}(x),\,0,\,y_{\max}\right)
 
 In Try 80:
 
-- for delay spread, \(y_{\max}=400\)
+- for delay spread, \(y_{\max}=910\)
 - for angular spread, \(y_{\max}=90\)
 
 ### 3.2 Shared Feature Stack
@@ -353,7 +353,7 @@ Then Try 80 applies region-dependent clipping:
 
 with:
 
-- delay spread: \(y_{\max}^{\text{LoS}}=400,\; y_{\max}^{\text{NLoS}}=400\)
+- delay spread: \(y_{\max}^{\text{LoS}}=910,\; y_{\max}^{\text{NLoS}}=910\)
 - angular spread: \(y_{\max}^{\text{LoS}}=15,\; y_{\max}^{\text{NLoS}}=90\)
 
 The regime \(r\) is keyed by:
