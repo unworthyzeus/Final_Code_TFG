@@ -9,6 +9,9 @@ data/
 *.ckpt
 *.safetensors
 
+# Published Try 76 expert checkpoints (regular Git blobs, intentionally not LFS).
+!try76_models/*.pt
+
 # Large/generated numeric artifacts.
 *.h5
 *.hdf5
