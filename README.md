@@ -1,8 +1,13 @@
 # TFG Final Code: Deep Learning for Air-to-Ground Propagation
 
-This repository contains the source code and technical documentation for the neural architectures developed during this TFG (Trabajo de Fin de Grado). It includes the final proposed training/evaluation pipeline and key legacy baseline implementations that remain useful for future research.
+This repository contains the source code, technical documentation, and published checkpoints for the neural architectures developed during this TFG (Trabajo de Fin de Grado). It includes the final proposed training/evaluation pipeline and key legacy baseline implementations that remain useful for future research.
 
-Data files and trained weight/checkpoint artifacts are intentionally not bundled here; this repository is for code, configuration, calibration JSONs, and documentation.
+The CKM dataset is not bundled here. The final Try 80 checkpoint and the 12 Try 76 expert checkpoints are included so the reported models can be downloaded and reproduced.
+
+## Published checkpoints
+
+- [Final Try 80 checkpoint](./model/best_model.pt): `try80_joint_huge_pathloss_finetune`, verified on the complete 2,590-map official test split. See [model/README.md](./model/README.md) for its identity, checksum, and metrics.
+- [Try 76 expert checkpoints](./try76_models): 12 morphology and LoS/NLoS experts, with checksums and loading instructions.
 
 ## Directory Structure
 
